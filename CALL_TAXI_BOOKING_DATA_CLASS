@@ -1,0 +1,44 @@
+package call_taxi;
+import  java.util.*;
+public class Taxi_booking {
+      int customerId;
+      boolean booked;
+      char current_spot;
+      int free_time;
+      int  total_earning;
+      static int taxi_count;
+      List<String> trip_details;
+      static  char ch='A';
+      public  Taxi_booking()
+      {
+          booked=false;
+          taxi_count=taxi_count+1;
+          customerId=taxi_count;
+          current_spot=ch++;
+          free_time=6;
+          total_earning=0;
+          trip_details=new ArrayList<>();
+      }
+
+      public void set_Details(boolean booked ,char current_spot,int free_time,int total_earning,String td)
+      {
+          this.booked=booked;
+          this.current_spot=current_spot;
+          this.free_time=free_time;
+          this.total_earning+=total_earning;
+          this.trip_details.add(td);
+      }
+      public void print_taxi_details()
+      {
+          System.out.println("TAXI.NO=  "+customerId+"    "+"TOTAL EARNING=  "+total_earning);
+          int trip=1;
+          System.out.println("TRIP NO "+ "DRIVER ID " + "PICKUP_PLACE " + "DROP_PLACE " + "PICKUP_TIME"+"  DROP_TIME");
+              for (String td : trip_details) {
+                  // tdetails=freee.customerId+"     "+pickup_place+"     "+dropplace+"     "+pickup_time+"     "+dt;
+                  System.out.println((trip++)+"         "+td);
+                  System.out.println("--------------------------------------------------------------------------------------");
+              }
+
+      }
+      }
+
