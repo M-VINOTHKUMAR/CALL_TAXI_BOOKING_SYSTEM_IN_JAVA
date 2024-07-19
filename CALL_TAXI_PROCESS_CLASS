@@ -1,0 +1,113 @@
+package call_taxi;
+
+import java.security.PublicKey;
+import java.util.*;
+
+
+public class Taxi_process {
+   static List<Taxi_booking> taxi=new ArrayList<>();
+
+    public static  void bookingtaxi(List<Taxi_booking>ft,int pickup_time,char pickup_place,char dropplace)
+    {
+        int dmin=Integer.MAX_VALUE;
+        int dbpd=0;// distance between pickup and drop
+        int earn=0;
+        String tdetails="";
+        Taxi_booking g=null;
+        int dt=0;
+        for(Taxi_booking freee:ft)
+        {
+            int dis=Math.abs(freee.current_spot-pickup_place)*15;
+            if(dis<dmin)
+            {
+                g=freee;
+                 dbpd=Math.abs(freee.current_spot-dropplace)*15;
+                // System.out.println(dbpd);
+                 earn=((dbpd-5)*10)+100;
+                dt=pickup_time+dbpd/15;//drop time
+                dmin=dis;
+                tdetails="   "+freee.customerId+"             "+pickup_place+"            "+dropplace+"        "+pickup_time+"          "+dt;
+            }
+        }
+
+        g.set_Details(true,dropplace,dt,earn,tdetails);
+
+        System.out.println("TAXI NO: "+g.customerId+"  BOOKED");
+    }
+
+
+    public static  void create_call_taxi(int count)
+    {
+        for(int i=0;i<count;i++)
+        {
+            Taxi_booking t=new Taxi_booking();
+            taxi.add(t);
+        }
+    }
+    public static  List<Taxi_booking> get_taxi(List<Taxi_booking> taxi,char pickup_place,int pickup_time)
+    {
+        List<Taxi_booking> freetaxi=new ArrayList<>();
+        for(Taxi_booking tref:taxi)
+        {
+            if(tref.free_time<=pickup_time && Math.abs((tref.current_spot-'A')-(pickup_place-'A'))<=pickup_time-tref.free_time)
+            {
+                freetaxi.add(tref);
+            }
+        }
+
+        return freetaxi;
+    }
+    public static void main(String[] args) {
+
+        create_call_taxi(4);
+        Scanner in=new Scanner(System.in);
+       // System.out.println(taxi);
+        while(true)
+        {
+            System.out.println("IF YOU PRESS-0 TAXI BOOKING OPTION");
+            System.out.println("IF YOU PRESS-1 THEN I SEND THE TAXI DETAILS");
+            System.out.println("IF YOU WANT TO EXIT IN THIS APP PRESS-3");
+            int chioce=in.nextInt();
+            if(chioce!=0 && chioce!=1 && chioce!=2 ) System.out.println("YOU PRESS WRONG KEY");
+            switch (chioce)
+            {
+                case 0:
+                {
+                    System.out.println("ENTER THE PICKUP_PLACE");
+                    char pickup_place=in.next().charAt(0);
+                    System.out.println("ENTER THE DROPING PLACE");
+                    char drop_place=in.next().charAt(0);
+                    System.out.println("ENTER THE PICKUP TIME");
+                    int pickup_time=in.nextInt();
+                    if(pickup_place<'A' ||pickup_place>'E' ||pickup_time<6 || drop_place>'E') {
+                        System.out.println(" YOU ARE ENTRY A WRONG PLACE OR WRONG TIME PLEASE CHECK THE PICKUP_PLACE WITH IN A TO E AND PICKUP TIME ABOVE 5.59");
+                            return ;
+                    }
+                   List<Taxi_booking> ft= get_taxi(taxi,pickup_place,pickup_time);
+                   if(ft.size()==0)
+                   {
+
+                       System.out.println("NO TAXI IS AVALIABLE");continue;
+
+                   }
+                    System.out.println(ft);
+                  Collections.sort(ft, Comparator.comparingInt(a -> a.total_earning));
+                   bookingtaxi(ft,pickup_time,pickup_place,drop_place);
+                    break;
+                }
+                case 1:
+                {
+                    for(Taxi_booking k:taxi)
+                    {
+                        k.print_taxi_details();
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    return;
+                }
+            }
+        }
+    }
+}
